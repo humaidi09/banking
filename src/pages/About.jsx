@@ -10,43 +10,28 @@ import {
 } from 'lucide-react'
 import { Money, INT64_MAX } from '@/engine/banking'
 import { usd } from '@/lib/money'
+import { PRINCIPLES } from '@/data/principles'
 import { Card, Callout, SectionHeading, Button, Badge } from '@/components/ui'
 import Reveal from '@/components/Reveal'
 
-// Live, not hand-typed: the classic float error vs. the exact integer result.
-const FLOAT_SUM = (0.1 + 0.2).toString()
-const EXACT_SUM = usd(Money.parse('0.10') + Money.parse('0.20'))
-const CEILING = usd(INT64_MAX)
-
-const PRINCIPLES = [
-  {
-    icon: Coins,
-    title: 'Money is exact',
-    body: 'Every amount is a whole number of minor units — cents, not dollars. There are no floats anywhere in the money path, so rounding drift is impossible.',
-  },
-  {
-    icon: Scale,
-    title: 'Balances are derived',
-    body: 'A balance is never stored as a number you must trust. It is folded from the account’s ledger on demand: replay the history from zero and you get the figure.',
-  },
-  {
-    icon: ScrollText,
-    title: 'The ledger is append-only',
-    body: 'Movements are only ever appended. Nothing is edited or deleted, so any balance can be re-proven from the very first entry at any time.',
-  },
-  {
-    icon: ArrowLeftRight,
-    title: 'Transfers are atomic',
-    body: 'A transfer validates both sides before touching either ledger. If anything fails, nothing moves — and a successful transfer conserves the bank’s total to the cent.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'No overdraft, no overflow',
-    body: 'Withdrawals can never exceed the balance, and checked 64-bit arithmetic refuses any amount that would overflow rather than silently wrapping.',
-  },
-]
+// Principle icons live here (not in the data) so the dataset can carry a plain
+// name string; a name the map doesn't know falls back to the shield.
+const ICONS = {
+  coins: Coins,
+  scale: Scale,
+  scroll: ScrollText,
+  transfer: ArrowLeftRight,
+  shield: ShieldCheck,
+}
 
 export default function About() {
+  // Live, not hand-typed: the classic float error vs. the exact integer result.
+  // Computed on each mount (not at module load) so an edited currency symbol —
+  // applied via a remount — is reflected here too.
+  const FLOAT_SUM = (0.1 + 0.2).toString()
+  const EXACT_SUM = usd(Money.parse('0.10') + Money.parse('0.20'))
+  const CEILING = usd(INT64_MAX)
+
   return (
     <div className="space-y-8">
       <Reveal>
@@ -93,17 +78,20 @@ export default function About() {
 
       {/* Principles */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {PRINCIPLES.map((p, i) => (
-          <Reveal key={p.title} className="h-full" delay={(i % 2) * 0.06}>
-            <Card className="h-full p-5 sm:p-6">
-              <span className="grid h-10 w-10 place-items-center rounded-xl border border-hair bg-fill text-neonCyan">
-                <p.icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-4 font-display text-lg font-semibold text-ink">{p.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted">{p.body}</p>
-            </Card>
-          </Reveal>
-        ))}
+        {PRINCIPLES.map((p, i) => {
+          const Icon = ICONS[p.icon] || ShieldCheck
+          return (
+            <Reveal key={i} className="h-full" delay={(i % 2) * 0.06}>
+              <Card className="h-full p-5 sm:p-6">
+                <span className="grid h-10 w-10 place-items-center rounded-xl border border-hair bg-fill text-neonCyan">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="mt-4 font-display text-lg font-semibold text-ink">{p.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">{p.body}</p>
+              </Card>
+            </Reveal>
+          )
+        })}
       </div>
 
       <Reveal>
