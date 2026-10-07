@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <rect width="32" height="32" rx="7" fill="#17140d" />
-  <rect x="9" y="9" width="14" height="14" rx="3" fill="none" stroke="#35c491" stroke-width="2" />
+  <!-- pediment (triangular roof) -->
+  <polygon points="16,4.6 26.6,13.4 5.4,13.4" fill="#4d9bf2" />
+  <!-- entablature (architrave below the roof) -->
+  <rect x="5.4" y="14.2" width="21.2" height="1.9" fill="#4d9bf2" />
+  <!-- three columns -->
+  <rect x="7" y="16.4" width="4" height="8.6" fill="#4d9bf2" />
+  <rect x="14" y="16.4" width="4" height="8.6" fill="#4d9bf2" />
+  <rect x="21" y="16.4" width="4" height="8.6" fill="#4d9bf2" />
+  <!-- stylobate (base plinth) -->
+  <rect x="5.4" y="25.5" width="21.2" height="1.9" fill="#4d9bf2" />
 </svg>
